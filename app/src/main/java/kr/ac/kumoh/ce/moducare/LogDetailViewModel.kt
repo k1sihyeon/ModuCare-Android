@@ -15,7 +15,7 @@ class LogDetailViewModel() : ViewModel() {
     private val _logList = MutableLiveData<List<mLog>>()
     private val _commentList = MutableLiveData<List<Comment>>()
 
-    val mLogList: LiveData<List<mLog>>
+    val logDetailList: LiveData<List<mLog>>
         get() = _logList
 
     val commentList: LiveData<List<Comment>>

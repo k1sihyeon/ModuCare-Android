@@ -14,7 +14,7 @@ class mLogViewModel() : ViewModel() {
     private val mlogApi: mLogApi
     private val _logList = MutableLiveData<List<mLog>>()
 
-    val mLogList: LiveData<List<mLog>>
+    val logList: LiveData<List<mLog>>
         get() = _logList
 
     init {
