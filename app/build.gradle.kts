@@ -40,7 +40,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material)
+//    implementation("androidx.compose.ui:ui-graphics:$compose_version")
+//    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
