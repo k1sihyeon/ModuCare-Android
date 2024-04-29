@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
+    implementation(libs.coil.compose)
 //    implementation("androidx.compose.ui:ui-graphics:$compose_version")
 //    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
 
