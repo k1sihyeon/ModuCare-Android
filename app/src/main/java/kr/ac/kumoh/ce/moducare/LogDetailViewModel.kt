@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class LogDetailViewModel() : ViewModel() {
-    private val SERVER_URL = "http://"
+    private val SERVER_URL = "https://mykumoh.azurewebsites.net/"
     private val logApi: mLogApi
     private val _logList = MutableLiveData<List<mLog>>()
     private val _commentList = MutableLiveData<List<Comment>>()

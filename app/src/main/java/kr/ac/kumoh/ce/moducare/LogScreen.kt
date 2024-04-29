@@ -1,6 +1,8 @@
 package kr.ac.kumoh.ce.moducare
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -94,8 +96,28 @@ fun BottomNavigationBar(navController: NavController) {
 
 @Composable
 fun LogList(navController: NavController, list: List<mLog>) {
+
+    LazyColumn (
+
+    ) {
+
+        items(list.size) {
+            LogItem(navController, list, it)
+        }
+    }
 }
 
 @Composable
-fun LogDetail(log: mLog, commentList: List<Comment>) {
+fun LogItem(navController: NavController, logList: List<mLog>, index: Int) {
+    Row {
+        Text(text = logList[index].content)
+        Text(text = logList[index].log_id.toString())
+        Text(text = logList[index].dateTime)
+
+        if (logList[index].isChecked) {
+            Text(text = "Checked")
+        } else {
+            Text(text = "Not Checked")
+        }
+    }
 }
