@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "131422056376",
+    "project_id": "moducare",
+    "storage_bucket": "moducare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131422056376:android:6c0c79c1874b7dd57f294d",
+        "android_client_info": {
+          "package_name": "kr.ac.kumoh.ce.moducare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE3pmyEGfel0VnzXR4CqszHZI_wh1teis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

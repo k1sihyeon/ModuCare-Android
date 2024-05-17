@@ -1,9 +1,17 @@
 package kr.ac.kumoh.ce.moducare
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,6 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kr.ac.kumoh.ce.moducare.ui.theme.ModuCareTheme
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.core.content.ContextCompat.getSystemService
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
 
@@ -25,7 +36,37 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen(logViewModel, logDetailViewModel)
         }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = token.toString() //=getString(R.string.msg_token_fmt, token)
+            Log.d("FCM", msg)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        })
+
+        createNotificationChannel("channel_id", "channel_name")
+
     }
+
+    // Notification 수신을 위한 체널 추가
+    private fun createNotificationChannel(id: String, name: String) {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(id, name, importance)
+
+        val notificationManager: NotificationManager
+                = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.createNotificationChannel(channel)
+    }
+
 }
 
 @Composable
@@ -41,3 +82,5 @@ fun MainScreen(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMod
         }
     }
 }
+
+
