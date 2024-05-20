@@ -1,4 +1,4 @@
-package kr.ac.kumoh.ce.moducare
+package kr.ac.kumoh.ce.moducare.viewModel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,20 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kr.ac.kumoh.ce.moducare.data.mLog
+import kr.ac.kumoh.ce.moducare.data.mLogApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class LogDetailViewModel() : ViewModel() {
-    private val SERVER_URL = "https://mykumoh.azurewebsites.net/"
-    private val logApi: mLogApi
+class mLogViewModel() : ViewModel() {
+    private val SERVER_URL = "http://118.219.42.214:8080/"
+    private val mlogApi: mLogApi
     private val _logList = MutableLiveData<List<mLog>>()
-    private val _commentList = MutableLiveData<List<Comment>>()
 
-    val logDetailList: LiveData<List<mLog>>
+    val logList: LiveData<List<mLog>>
         get() = _logList
-
-    val commentList: LiveData<List<Comment>>
-        get() = _commentList
 
     init {
         val retrofit = Retrofit.Builder()
@@ -27,17 +25,17 @@ class LogDetailViewModel() : ViewModel() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        logApi = retrofit.create(mLogApi::class.java)
+        mlogApi = retrofit.create(mLogApi::class.java)
+        fetchData()
     }
 
-
-    fun loadComments(logId: Int) {
+    private fun fetchData() {
         viewModelScope.launch {
             try {
-                val response = logApi.getComments(logId)
-                _commentList.value = response
+                val response = mlogApi.getLogList()
+                _logList.value = response
             } catch (e: Exception) {
-                Log.e("loadComments()", e.toString())
+                Log.e("fetchData()", e.toString())
             }
         }
     }

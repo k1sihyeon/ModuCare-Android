@@ -2,29 +2,26 @@ package kr.ac.kumoh.ce.moducare
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import kr.ac.kumoh.ce.moducare.ui.theme.ModuCareTheme
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import kr.ac.kumoh.ce.moducare.screen.ModuCareApp
+import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
+import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
 
 class MainActivity : ComponentActivity() {
 

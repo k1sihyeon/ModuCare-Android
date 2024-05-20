@@ -52,10 +52,11 @@ android {
 
 dependencies {
     implementation(libs.firebase.bom)
-    implementation(libs.firebase.analytics)
+    //implementation(libs.firebase.analytics)
 
+    //implementation("com.google.firebase:firebase-core")
     implementation (libs.firebase.messaging)
-    implementation (libs.firebase.messaging.ktx)
+    //implementation (libs.firebase.messaging.ktx)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

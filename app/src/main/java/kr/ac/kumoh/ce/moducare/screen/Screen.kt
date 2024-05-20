@@ -1,4 +1,4 @@
-package kr.ac.kumoh.ce.moducare
+package kr.ac.kumoh.ce.moducare.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,16 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Card
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,10 +24,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import kr.ac.kumoh.ce.moducare.data.mLog
+import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
 
 enum class Screen {
     List,
     Detail,
+    Map,
     Profile
 }
 
@@ -72,11 +66,17 @@ fun ModuCareApp(logList: List<mLog>, logDetailViewModel: LogDetailViewModel) {
                 if (index < 0)
                     LogDetailTemp()
                 else {
-                    val logId = logList[index].log_id
+                    val logId = logList[index].logId
                     //logDetailViewModel.loadComments(logId) //
                     LogDetail(logList[index], commentList)
 
                 }
+            }
+
+            composable(
+                route = Screen.Map.name
+            ) {
+                MapScreen()
             }
 
             composable(
@@ -89,73 +89,16 @@ fun ModuCareApp(logList: List<mLog>, logDetailViewModel: LogDetailViewModel) {
     }
 }
 
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    BottomNavigation {
-        val items = listOf(
-            Screen.List,
-            Screen.Detail,
-            Screen.Profile
-        )
-
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = {
-                    val icon = when (screen) {
-                        Screen.List -> Icons.Outlined.Home
-                        Screen.Detail -> Icons.Outlined.Info
-                        Screen.Profile -> Icons.Outlined.Person
-                    }
-                    Icon(icon, contentDescription = null)
-                },
-                label = {
-                    Text(screen.name)
-                },
-                selected = false,
-                onClick = {
-                    navController.navigate(screen.name)
-                }
-            )
-        }
-    }
-}
 
 @Composable
 fun LogList(navController: NavController, list: List<mLog>) {
 
-    LogListTemp(navController, list)
+    //LogListTemp(navController, list)
 
-    LazyColumn (
-
-    ) {
-
-        items(list.size) {
-            LogItem(navController, list, it)
-        }
-    }
-}
-
-@Composable
-fun LogItem(navController: NavController, logList: List<mLog>, index: Int) {
-    Row {
-        Text(text = logList[index].content)
-        Text(text = logList[index].log_id.toString())
-        Text(text = logList[index].dateTime)
-
-        if (logList[index].isChecked) {
-            Text(text = "Checked")
-        } else {
-            Text(text = "Not Checked")
-        }
-    }
-}
-
-@Composable
-fun LogListTemp(navController: NavController, list: List<mLog>) {
-    Column(
+    Column (
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxSize()
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -166,19 +109,23 @@ fun LogListTemp(navController: NavController, list: List<mLog>) {
             Text(text = "Location")
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(10) {index ->
+        LazyColumn (
 
-                LogItemTemp(index)
+        ) {
+
+            items(list.size) {
+                LogItem(navController, list, it)
             }
         }
+
     }
+
+
 }
 
 @Composable
-fun LogItemTemp(idx: Int) {
+fun LogItem(navController: NavController, logList: List<mLog>, index: Int) {
+
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -195,10 +142,64 @@ fun LogItemTemp(idx: Int) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Column {
-                Text(text = "No. $idx")
-                Text(text = "This is a test")
+                Text(text = "No. " + logList[index].logId.toString())
+                Text(text = logList[index].content)
             }
-            Text(text = "디지털관 000호")
+            Text(text = logList[index].location)
         }
     }
+
 }
+
+//@Composable
+//fun LogListTemp(navController: NavController, list: List<mLog>) {
+//    Column(
+//        modifier = Modifier
+//            .padding(16.dp)
+//            .fillMaxSize()
+//    ) {
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween
+//        ) {
+//            Text(text = "Log ID")
+//            Text(text = "Content")
+//            Text(text = "Location")
+//        }
+//
+//        LazyColumn(
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            items(10) {index ->
+//
+//                LogItemTemp(index)
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun LogItemTemp(idx: Int) {
+//    Card(
+//        modifier = Modifier
+//            .padding(8.dp)
+//            .fillMaxWidth()
+//            .clickable {
+//                //navController.navigate(Screen.Detail.name + "/$idx")
+//            },
+//        elevation = 8.dp,
+//        backgroundColor = Color.DarkGray
+//    ) {
+//        Row (
+//            modifier = Modifier.padding(8.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceAround
+//        ) {
+//            Column {
+//                Text(text = "No. $idx")
+//                Text(text = "This is a test")
+//            }
+//            Text(text = "디지털관 000호")
+//        }
+//    }
+//}

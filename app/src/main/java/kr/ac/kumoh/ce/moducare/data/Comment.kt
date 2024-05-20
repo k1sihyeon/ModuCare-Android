@@ -1,4 +1,4 @@
-package kr.ac.kumoh.ce.moducare
+package kr.ac.kumoh.ce.moducare.data
 
 data class Comment(
     val cmtId: Int,
