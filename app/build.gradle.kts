@@ -51,9 +51,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     //implementation(libs.firebase.analytics)
 
+    implementation(libs.androidx.appcompat)
     //implementation("com.google.firebase:firebase-core")
     implementation (libs.firebase.messaging)
     //implementation (libs.firebase.messaging.ktx)

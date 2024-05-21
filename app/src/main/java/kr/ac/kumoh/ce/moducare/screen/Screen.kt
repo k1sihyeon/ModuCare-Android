@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kr.ac.kumoh.ce.moducare.data.mLog
+import kr.ac.kumoh.ce.moducare.ui.theme.Typography
 import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
 import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
 
@@ -41,8 +41,6 @@ enum class Screen {
 fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewModel) {
     val logList by logViewModel.logList.observeAsState(emptyList())
     val navController = rememberNavController()
-
-    var index = -1
 
     Scaffold (
       bottomBar = {
@@ -69,11 +67,9 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
                 val logId = it.arguments?.getLong("logId") ?: -1
 
                 if (logId < 0)
-                    LogDetailTemp()
+                    LoadingScreen()
                 else {
-
                     LogDetail(logId, logDetailViewModel, logViewModel)
-
                 }
             }
 
@@ -97,13 +93,7 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
 @Composable
 fun LogList(navController: NavController, list: List<mLog>) {
 
-    //LogListTemp(navController, list)
-    var background = Color.LightGray
-
-    if (isSystemInDarkTheme())
-        background = Color.DarkGray
-    else
-        background = Color.LightGray
+    val background = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
 
     Column (
         modifier = Modifier
@@ -114,9 +104,9 @@ fun LogList(navController: NavController, list: List<mLog>) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Log ID")
-            Text(text = "Content")
-            Text(text = "Location")
+            Text(text = "Log ID", style = Typography.bodySmall)
+            Text(text = "Content", style = Typography.bodySmall)
+            Text(text = "Location", style = Typography.bodySmall)
         }
 
         LazyColumn (
@@ -152,10 +142,10 @@ fun LogItem(navController: NavController, log: mLog, color: Color) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Column {
-                Text(text = "No. " + log.logId.toString())
-                Text(text = log.content)
+                Text(text = "No. " + log.logId.toString(), style = Typography.bodyMedium)
+                Text(text = log.content, style = Typography.bodyMedium)
             }
-            Text(text = log.location)
+            Text(text = log.location, style = Typography.bodyMedium)
         }
     }
 

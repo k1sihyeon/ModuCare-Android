@@ -8,5 +8,5 @@ data class mLog (
     val content: String,
     val imagePath: String,
     val createdAt: LocalDateTime,
-    val isChecked: Boolean,
+    var isChecked: Boolean,
 )

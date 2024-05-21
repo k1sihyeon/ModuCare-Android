@@ -1,5 +1,6 @@
 package kr.ac.kumoh.ce.moducare.screen
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -25,32 +28,62 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
+import kr.ac.kumoh.ce.moducare.MainActivity
 import kr.ac.kumoh.ce.moducare.data.Comment
 import kr.ac.kumoh.ce.moducare.data.mLog
+import kr.ac.kumoh.ce.moducare.ui.theme.Typography
 import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
 import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
-import java.time.LocalDateTime
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:mLogViewModel) {
 
-    //현재 메인 화면 갔다 와야 버튼 갱신됨
-    val log by logViewModel.log.observeAsState(mLog(0, "", "", "", LocalDateTime.now(),false))
-    logViewModel.loadLog(logId)
+    val log by logViewModel.log.observeAsState()
+
+    LaunchedEffect(logId) {
+        logViewModel.loadLog(logId)
+    }
+
+    log?.let {
+        LogDetailContent(log = it, logViewModel, logDetailViewModel)
+    } ?: run {
+        LoadingScreen()
+    }
+
+}
+
+@Composable
+fun CommentItem(comment: Comment) {
+    Column {
+        Text(text = comment.content)
+        Text(text = comment.createdAt.toString())
+        Text(text = comment.userName)
+        Text(text = comment.userPosition)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LogDetailContent(log: mLog, logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewModel) {
 
     val commentList by logDetailViewModel.commentList.observeAsState(emptyList())
     logDetailViewModel.loadComments(log.logId)
-    
+
+    var isChecked = log.isChecked
+    val buttonColor = if (isChecked) Color.Gray else MaterialTheme.colorScheme.primary
+    val buttonText = if (isChecked) "확인 완료됨" else "확인 했어요"
+    val buttonEnabled = !isChecked
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "#${log.logId} Log Detail")
+                    Text(text = "#${log.logId} Log Detail", style = Typography.headlineLarge)
                 },
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -81,6 +114,16 @@ fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+
+                Text(text = log.content,
+                    fontSize = 20.sp,)
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
 
@@ -96,14 +139,7 @@ fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:
                 Text(text = log.createdAt.toString())
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
 
-                Text(text = log.content)
-            }
 
             Spacer(modifier = Modifier.padding(20.dp))
 
@@ -113,25 +149,18 @@ fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                if (log.isChecked) {
-                    Button(
-                        onClick = {
-                            //non clickable
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
-                    ) {
-                        Text(text = "확인 완료됨")
-                    }
-                } else {
-                    Button(
-                        onClick = {
+                Button(
+                    onClick = {
+                        if (!isChecked) {
                             logViewModel.checkLog(log.logId, true)
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                    ) {
-                        Text(text = "확인했어요")
-                    }
+                            log.isChecked = true
+                        }
+                    },
+                    enabled = buttonEnabled,
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                ) {
+                    Text(text = buttonText)
                 }
 
             }
@@ -166,17 +195,14 @@ fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:
 
     }
 
+
 }
 
 @Composable
-fun CommentItem(comment: Comment) {
-    Column {
-        Text(text = comment.content)
-        Text(text = comment.createdAt.toString())
-        Text(text = comment.userName)
-        Text(text = comment.userPosition)
-    }
+fun LoadingScreen() {
+    Text(text = "Loading...")
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

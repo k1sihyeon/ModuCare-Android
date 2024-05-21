@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import kr.ac.kumoh.ce.moducare.ui.theme.Typography
 
 
 @Composable
@@ -38,7 +39,7 @@ fun BottomNavigationBar(navController: NavController) {
                     Icon(icon, contentDescription = null)
                 },
                 label = {
-                    Text(screen.name)
+                    Text(screen.name, style = Typography.labelMedium)
                 },
                 selected = false,
                 onClick = {
