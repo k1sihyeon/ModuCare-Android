@@ -1,14 +1,18 @@
 package kr.ac.kumoh.ce.moducare.screen
 
+import android.content.ClipData.Item
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,12 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
 import kr.ac.kumoh.ce.moducare.MainActivity
+import kr.ac.kumoh.ce.moducare.R
 import kr.ac.kumoh.ce.moducare.data.Comment
 import kr.ac.kumoh.ce.moducare.data.mLog
 import kr.ac.kumoh.ce.moducare.ui.theme.Typography
@@ -59,11 +66,59 @@ fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel:
 
 @Composable
 fun CommentItem(comment: Comment) {
-    Column {
-        Text(text = comment.content)
-        Text(text = comment.createdAt.toString())
-        Text(text = comment.userName)
-        Text(text = comment.userPosition)
+    Column (
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.Left,
+        ) {
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            AsyncImage(
+                model = "https://picsum.photos/50/50",
+                contentDescription = "comment profile Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(50.dp, 50.dp)
+                    .clip(CircleShape)
+            )
+
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Column (
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(text = comment.userName, style = Typography.bodyMedium)
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = comment.userPosition, style = Typography.bodySmall)
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(text = comment.createdAt.toString(), style = Typography.bodySmall)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.padding(5.dp))
+
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+
+            //Spacer(modifier = Modifier.padding(80.dp))
+
+            Text(text = comment.content, style = Typography.bodyMedium)
+
+        }
     }
 }
 
@@ -100,48 +155,62 @@ fun LogDetailContent(log: mLog, logViewModel: mLogViewModel, logDetailViewModel:
 
             Spacer(modifier = Modifier.padding(20.dp))
 
-            AsyncImage(
-                model = "https://picsum.photos/400/300",
-                contentDescription = "test Image",
+//            AsyncImage(
+//                model = "https://picsum.photos/400/300", // log.imagePath
+//                contentDescription = "test Image",
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .size(400.dp, 300.dp)
+//                    .clip(RoundedCornerShape(percent = 5))
+//            )
+
+            Image(
+                painter = painterResource(id = R.drawable.detected),
+                contentDescription = "detected Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(400.dp, 300.dp)
                     .clip(RoundedCornerShape(percent = 5))
             )
 
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Absolute.Left,
             ) {
-
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(text = log.content,
-                    fontSize = 20.sp,)
+                    style = Typography.headlineMedium,)
             }
+
+            Spacer(modifier = Modifier.padding(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Absolute.Left,
             ) {
-
-                Text(text = log.location)
+                Spacer(modifier = Modifier.padding(10.dp))
+                Text(text = log.createdAt.toString(),
+                    style = Typography.bodyMedium,)
             }
+
+            Spacer(modifier = Modifier.padding(5.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Absolute.Left,
             ) {
-
-                Text(text = log.createdAt.toString())
+                Spacer(modifier = Modifier.padding(10.dp))
+                Text(text = log.location,
+                    style = Typography.bodyMedium,)
             }
 
 
-
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -165,16 +234,18 @@ fun LogDetailContent(log: mLog, logViewModel: mLogViewModel, logDetailViewModel:
 
             }
 
+            Spacer(modifier = Modifier.padding(1.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                Text(text = "환자 상태 확인 이후 \"확인했어요\" 버튼을 눌러주세요")
+                Text(text = "환자 상태 확인 이후 \"확인 했어요\" 버튼을 눌러 주세요", style = Typography.bodySmall)
             }
 
-            Spacer(modifier = Modifier.padding(50.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -182,9 +253,8 @@ fun LogDetailContent(log: mLog, logViewModel: mLogViewModel, logDetailViewModel:
                 horizontalArrangement = Arrangement.Center
             ) {
 
-                Text(text = "댓글 공간")
                 LazyColumn (
-
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     items(commentList.size) {
                         CommentItem(commentList[it])

@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -136,17 +137,36 @@ fun LogItem(navController: NavController, log: mLog, color: Color) {
         elevation = 8.dp,
         backgroundColor = color
     ) {
-        Row (
-            modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+
+        Column (
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
-            Column {
-                Text(text = "No. " + log.logId.toString(), style = Typography.bodyMedium)
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+
+            ) {
+                Text(text = "No. " + log.logId.toString(), style = Typography.bodySmall)
+                Text(text = log.location, style = Typography.bodySmall)
+            }
+
+            Spacer(modifier = Modifier.padding(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(text = log.content, style = Typography.bodyMedium)
             }
-            Text(text = log.location, style = Typography.bodyMedium)
+
         }
+
     }
 
 }
