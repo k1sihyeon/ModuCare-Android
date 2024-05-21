@@ -1,6 +1,7 @@
 package kr.ac.kumoh.ce.moducare.screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kr.ac.kumoh.ce.moducare.data.mLog
 import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
+import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
 
 enum class Screen {
     List,
@@ -35,9 +38,10 @@ enum class Screen {
 }
 
 @Composable
-fun ModuCareApp(logList: List<mLog>, logDetailViewModel: LogDetailViewModel) {
+fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewModel) {
+    val logList by logViewModel.logList.observeAsState(emptyList())
     val navController = rememberNavController()
-    val commentList by logDetailViewModel.commentList.observeAsState(emptyList())
+
     var index = -1
 
     Scaffold (
@@ -56,19 +60,19 @@ fun ModuCareApp(logList: List<mLog>, logDetailViewModel: LogDetailViewModel) {
             }
 
             composable(
-                route = Screen.Detail.name, // + "/{index}",
-                arguments = listOf(navArgument("index") {
-                    type = NavType.IntType
+                route = Screen.Detail.name + "/{logId}",
+                arguments = listOf(navArgument("logId") {
+                    type = NavType.LongType
                     defaultValue = -1
                 })
             ) {
-                val index = it.arguments?.getInt("index") ?: -1
-                if (index < 0)
+                val logId = it.arguments?.getLong("logId") ?: -1
+
+                if (logId < 0)
                     LogDetailTemp()
                 else {
-                    val logId = logList[index].logId
-                    //logDetailViewModel.loadComments(logId) //
-                    LogDetail(logList[index], commentList)
+
+                    LogDetail(logId, logDetailViewModel, logViewModel)
 
                 }
             }
@@ -94,6 +98,12 @@ fun ModuCareApp(logList: List<mLog>, logDetailViewModel: LogDetailViewModel) {
 fun LogList(navController: NavController, list: List<mLog>) {
 
     //LogListTemp(navController, list)
+    var background = Color.LightGray
+
+    if (isSystemInDarkTheme())
+        background = Color.DarkGray
+    else
+        background = Color.LightGray
 
     Column (
         modifier = Modifier
@@ -114,7 +124,7 @@ fun LogList(navController: NavController, list: List<mLog>) {
         ) {
 
             items(list.size) {
-                LogItem(navController, list, it)
+                LogItem(navController, list[it], background)
             }
         }
 
@@ -124,17 +134,17 @@ fun LogList(navController: NavController, list: List<mLog>) {
 }
 
 @Composable
-fun LogItem(navController: NavController, logList: List<mLog>, index: Int) {
+fun LogItem(navController: NavController, log: mLog, color: Color) {
 
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .clickable {
-                //navController.navigate(Screen.Detail.name + "/$idx")
+                navController.navigate(Screen.Detail.name + "/${log.logId}")
             },
         elevation = 8.dp,
-        backgroundColor = Color.DarkGray
+        backgroundColor = color
     ) {
         Row (
             modifier = Modifier.padding(8.dp),
@@ -142,10 +152,10 @@ fun LogItem(navController: NavController, logList: List<mLog>, index: Int) {
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Column {
-                Text(text = "No. " + logList[index].logId.toString())
-                Text(text = logList[index].content)
+                Text(text = "No. " + log.logId.toString())
+                Text(text = log.content)
             }
-            Text(text = logList[index].location)
+            Text(text = log.location)
         }
     }
 

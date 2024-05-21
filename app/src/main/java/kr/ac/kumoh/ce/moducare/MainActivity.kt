@@ -3,6 +3,7 @@ package kr.ac.kumoh.ce.moducare
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MainScreen(logViewModel, logDetailViewModel)
         }
@@ -68,14 +70,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewModel) {
-    val logList by logViewModel.logList.observeAsState(emptyList())
+    //val logList by logViewModel.logList.observeAsState(emptyList())
 
     ModuCareTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            ModuCareApp(logList, logDetailViewModel)
+            ModuCareApp(logViewModel, logDetailViewModel)
         }
     }
 }

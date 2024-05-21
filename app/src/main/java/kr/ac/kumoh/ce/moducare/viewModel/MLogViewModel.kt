@@ -39,6 +39,7 @@ class mLogViewModel() : ViewModel() {
     private val SERVER_URL = "http://118.219.42.214:8080/"
     private val mlogApi: mLogApi
     private val _logList = MutableLiveData<List<mLog>>()
+    private val _log = MutableLiveData<mLog>()
 
     private val gson = GsonBuilder()
         .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeSerializer())
@@ -48,6 +49,9 @@ class mLogViewModel() : ViewModel() {
 
     val logList: LiveData<List<mLog>>
         get() = _logList
+
+    val log: LiveData<mLog>
+        get() = _log
 
     init {
         val retrofit = Retrofit.Builder()
@@ -66,6 +70,27 @@ class mLogViewModel() : ViewModel() {
                 _logList.value = response
             } catch (e: Exception) {
                 Log.e("fetchData()", e.toString())
+            }
+        }
+    }
+
+    fun checkLog(logId: Long, check: Boolean) {
+        viewModelScope.launch {
+            try {
+                mlogApi.checkLog(logId, check)
+            } catch (e: Exception) {
+                Log.e("checkLog()", e.toString())
+            }
+        }
+    }
+
+    fun loadLog(logId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = mlogApi.getLog(logId)
+                _log.value = response
+            } catch (e: Exception) {
+                Log.e("loadLog()", e.toString())
             }
         }
     }

@@ -11,11 +11,9 @@ interface mLogApi {
     suspend fun getLogList(): List<mLog>
 
     @GET("api/logs/{id}")
-    suspend fun getLog(@Path("id") id: Int): mLog
+    suspend fun getLog(@Path("id") id: Long): mLog
 
     @PATCH("api/logs/{id}/checked")
     suspend fun checkLog(@Path("id") id: Long, @Body checked: Boolean): mLog
 
-    @GET("api/logs/{id}/comments")
-    suspend fun getComments(@Path("id") id: Int): List<Comment>
 }

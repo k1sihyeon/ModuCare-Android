@@ -5,21 +5,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.launch
 import kr.ac.kumoh.ce.moducare.data.Comment
+import kr.ac.kumoh.ce.moducare.data.CommentApi
 import kr.ac.kumoh.ce.moducare.data.mLog
 import kr.ac.kumoh.ce.moducare.data.mLogApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDateTime
 
 class LogDetailViewModel() : ViewModel() {
-    private val SERVER_URL = "https://mykumoh.azurewebsites.net/"
-    private val logApi: mLogApi
-    private val _logList = MutableLiveData<List<mLog>>()
+    private val SERVER_URL = "http://118.219.42.214:8080/"
+    private val commnetApi: CommentApi
     private val _commentList = MutableLiveData<List<Comment>>()
 
-    val logDetailList: LiveData<List<mLog>>
-        get() = _logList
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeSerializer())
+        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+        .create()
 
     val commentList: LiveData<List<Comment>>
         get() = _commentList
@@ -27,17 +31,17 @@ class LogDetailViewModel() : ViewModel() {
     init {
         val retrofit = Retrofit.Builder()
             .baseUrl(SERVER_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        logApi = retrofit.create(mLogApi::class.java)
+        commnetApi = retrofit.create(CommentApi::class.java)
     }
 
 
-    fun loadComments(logId: Int) {
+    fun loadComments(logId: Long) {
         viewModelScope.launch {
             try {
-                val response = logApi.getComments(logId)
+                val response = commnetApi.getComments(logId)
                 _commentList.value = response
             } catch (e: Exception) {
                 Log.e("loadComments()", e.toString())
