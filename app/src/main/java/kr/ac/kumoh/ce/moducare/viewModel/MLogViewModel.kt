@@ -64,7 +64,7 @@ class mLogViewModel() : ViewModel() {
         fetchData()
     }
 
-    private fun fetchData() {
+    fun fetchData() {
         viewModelScope.launch {
             try {
                 val response = mlogApi.getLogList()

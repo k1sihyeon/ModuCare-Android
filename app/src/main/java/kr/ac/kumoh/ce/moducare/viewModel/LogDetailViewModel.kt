@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.coroutines.launch
 import kr.ac.kumoh.ce.moducare.data.Comment
 import kr.ac.kumoh.ce.moducare.data.CommentApi
+import kr.ac.kumoh.ce.moducare.data.CommentRequest
 import kr.ac.kumoh.ce.moducare.data.mLog
 import kr.ac.kumoh.ce.moducare.data.mLogApi
 import retrofit2.Retrofit
@@ -45,6 +46,17 @@ class LogDetailViewModel() : ViewModel() {
                 _commentList.value = response
             } catch (e: Exception) {
                 Log.e("loadComments()", e.toString())
+            }
+        }
+    }
+
+    fun postComment(logId: Long, content: String, userId: String, createdAt: LocalDateTime) {
+        viewModelScope.launch {
+            try {
+                commnetApi.postComment(logId, CommentRequest(userId, content, createdAt))
+                loadComments(logId)
+            } catch (e: Exception) {
+                Log.e("postComment()", e.toString())
             }
         }
     }

@@ -26,6 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kr.ac.kumoh.ce.moducare.data.mLog
 import kr.ac.kumoh.ce.moducare.ui.theme.Typography
 import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
@@ -52,10 +54,25 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
         NavHost(
             navController = navController,
             startDestination = Screen.List.name,
-            Modifier.padding(innerPadding)
+            Modifier//.padding(innerPadding)
+                .fillMaxSize()
         ) {
             composable(route = Screen.List.name) {
-                LogList(navController, logList)
+
+                val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
+
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = {
+                        logViewModel.fetchData()
+                        swipeRefreshState.isRefreshing = false
+                    },
+                    modifier = Modifier.padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    LogList(navController, logList)
+                }
+
             }
 
             composable(
@@ -69,9 +86,8 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
 
                 if (logId < 0)
                     LoadingScreen()
-                else {
+                else
                     LogDetail(logId, logDetailViewModel, logViewModel)
-                }
             }
 
             composable(
@@ -99,11 +115,15 @@ fun LogList(navController: NavController, list: List<mLog>) {
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+            ,
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Log ID", style = Typography.bodySmall)
             Text(text = "Content", style = Typography.bodySmall)
@@ -170,56 +190,3 @@ fun LogItem(navController: NavController, log: mLog, color: Color) {
     }
 
 }
-
-//@Composable
-//fun LogListTemp(navController: NavController, list: List<mLog>) {
-//    Column(
-//        modifier = Modifier
-//            .padding(16.dp)
-//            .fillMaxSize()
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            Text(text = "Log ID")
-//            Text(text = "Content")
-//            Text(text = "Location")
-//        }
-//
-//        LazyColumn(
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            items(10) {index ->
-//
-//                LogItemTemp(index)
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun LogItemTemp(idx: Int) {
-//    Card(
-//        modifier = Modifier
-//            .padding(8.dp)
-//            .fillMaxWidth()
-//            .clickable {
-//                //navController.navigate(Screen.Detail.name + "/$idx")
-//            },
-//        elevation = 8.dp,
-//        backgroundColor = Color.DarkGray
-//    ) {
-//        Row (
-//            modifier = Modifier.padding(8.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceAround
-//        ) {
-//            Column {
-//                Text(text = "No. $idx")
-//                Text(text = "This is a test")
-//            }
-//            Text(text = "디지털관 000호")
-//        }
-//    }
-//}

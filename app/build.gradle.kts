@@ -54,6 +54,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     //implementation(libs.firebase.analytics)
 
+    implementation(libs.accompanist.swiperefresh)
+
     implementation(libs.androidx.appcompat)
     //implementation("com.google.firebase:firebase-core")
     implementation (libs.firebase.messaging)
