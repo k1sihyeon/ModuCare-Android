@@ -1,6 +1,6 @@
 [versions]
 accompanistSwiperefresh = "0.24.13-rc"
-agp = "8.3.2"
+agp = "8.4.1"
 appcompat = "1.6.1"
 coilCompose = "2.5.0"
 coilComposeVersion = "2.4.0"

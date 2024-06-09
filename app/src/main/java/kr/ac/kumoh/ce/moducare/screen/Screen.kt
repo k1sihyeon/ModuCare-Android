@@ -48,7 +48,9 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
     Scaffold (
       bottomBar = {
           BottomNavigationBar(navController)
-      }
+      },
+      modifier = Modifier.fillMaxSize()
+
     ) {
         innerPadding ->
         NavHost(

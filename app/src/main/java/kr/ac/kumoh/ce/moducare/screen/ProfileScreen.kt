@@ -45,6 +45,7 @@ fun ProfileScreen() {
         ) {
 
             Text(text = "김금오")
+            Text(text = "간호사")
         }
 
         Spacer(modifier = Modifier.padding(20.dp))

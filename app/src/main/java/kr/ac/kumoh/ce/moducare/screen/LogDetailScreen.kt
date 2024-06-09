@@ -57,6 +57,7 @@ import kr.ac.kumoh.ce.moducare.viewModel.LogDetailViewModel
 import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
 import retrofit2.Retrofit
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel: mLogViewModel) {
@@ -151,7 +152,9 @@ fun LogDetailContent(
 
     var showDialog by remember { mutableStateOf(false) }
     var inputText by remember { mutableStateOf("") }
+    var hasError by remember { mutableStateOf(false) }
 
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
 
@@ -186,23 +189,28 @@ fun LogDetailContent(
 
                 Spacer(modifier = Modifier.padding(20.dp))
 
-//            AsyncImage(
-//                model = "https://picsum.photos/400/300", // log.imagePath
-//                contentDescription = "test Image",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .size(400.dp, 300.dp)
-//                    .clip(RoundedCornerShape(percent = 5))
-//            )
-
-                Image(
-                    painter = painterResource(id = R.drawable.detected),
+                AsyncImage(
+                    model = "http://118.219.42.214:8080/api/image/files/" + log.imagePath,
                     contentDescription = "detected Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(400.dp, 300.dp)
-                        .clip(RoundedCornerShape(percent = 5))
+                        .clip(RoundedCornerShape(percent = 5)),
+                    onError = {
+                        hasError = true
+                    }
                 )
+
+                if (hasError) {
+                    Image(
+                        painter = painterResource(id = R.drawable.detected),
+                        contentDescription = "detected Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(400.dp, 300.dp)
+                            .clip(RoundedCornerShape(percent = 5))
+                    )
+                }
 
                 Spacer(modifier = Modifier.padding(15.dp))
 
