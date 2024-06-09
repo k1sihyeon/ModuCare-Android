@@ -43,7 +43,10 @@ fun BottomNavigationBar(navController: NavController) {
                 },
                 selected = false,
                 onClick = {
-                    navController.navigate(screen.name)
+                    if (screen == Screen.Detail)
+                        navController.navigate(screen.name + "/-1")
+                    else
+                        navController.navigate(screen.name)
                 }
             )
         }

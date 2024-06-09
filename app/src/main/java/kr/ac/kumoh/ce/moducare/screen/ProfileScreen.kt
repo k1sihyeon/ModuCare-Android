@@ -45,6 +45,13 @@ fun ProfileScreen() {
         ) {
 
             Text(text = "김금오")
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Text(text = "간호사")
         }
 
