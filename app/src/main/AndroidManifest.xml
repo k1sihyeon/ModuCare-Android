@@ -27,6 +27,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="eajc8ho217" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">

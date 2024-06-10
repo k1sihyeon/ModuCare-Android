@@ -51,6 +51,11 @@ android {
 }
 
 dependencies {
+
+    implementation ("io.github.fornewid:naver-map-location:16.0.0")
+    implementation ("io.github.fornewid:naver-map-compose:1.5.7")
+    //implementation("com.naver.maps:map-sdk:3.18.0")
+
     implementation(platform(libs.firebase.bom))
     //implementation(libs.firebase.analytics)
 
