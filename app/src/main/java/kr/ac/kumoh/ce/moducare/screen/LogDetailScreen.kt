@@ -62,6 +62,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun LogDetail(logId: Long, logDetailViewModel: LogDetailViewModel, logViewModel: mLogViewModel) {
 
+    Modifier.fillMaxSize()
+
     val log by logViewModel.log.observeAsState()
 
     LaunchedEffect(logId) {

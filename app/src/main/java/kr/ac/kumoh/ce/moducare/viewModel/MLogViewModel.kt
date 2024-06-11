@@ -41,6 +41,7 @@ class mLogViewModel() : ViewModel() {
     private val mlogApi: mLogApi
     private val _logList = MutableLiveData<List<mLog>>()
     private val _log = MutableLiveData<mLog>()
+    private val _unchedkedLog = MutableLiveData<List<mLog>>()
 
     private val gson = GsonBuilder()
         .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeSerializer())
@@ -53,6 +54,9 @@ class mLogViewModel() : ViewModel() {
 
     val log: LiveData<mLog>
         get() = _log
+
+    val uncheckedLog: LiveData<List<mLog>>
+        get() = _unchedkedLog
 
     init {
         val retrofit = Retrofit.Builder()
@@ -92,6 +96,17 @@ class mLogViewModel() : ViewModel() {
                 _log.value = response
             } catch (e: Exception) {
                 Log.e("loadLog()", e.toString())
+            }
+        }
+    }
+
+    fun loadUncheckedLog() {
+        viewModelScope.launch {
+            try {
+                val response = mlogApi.getUncheckedLog()
+                _unchedkedLog.value = response
+            } catch (e: Exception) {
+                Log.e("loadUncheckedLog()", e.toString())
             }
         }
     }

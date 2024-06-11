@@ -16,4 +16,7 @@ interface mLogApi {
     @PATCH("api/logs/{id}/checked")
     suspend fun checkLog(@Path("id") id: Long, @Body checked: Boolean): mLog
 
+    @GET("api/logs/unchecked")
+    suspend fun getUncheckedLog(): List<mLog>
+
 }

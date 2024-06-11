@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -52,7 +52,9 @@ android {
 
 dependencies {
 
-    implementation ("io.github.fornewid:naver-map-location:16.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
+    implementation ("io.github.fornewid:naver-map-location:21.0.2")
     implementation ("io.github.fornewid:naver-map-compose:1.5.7")
     //implementation("com.naver.maps:map-sdk:3.18.0")
 
