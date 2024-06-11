@@ -3,6 +3,7 @@ package kr.ac.kumoh.ce.moducare.screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,6 +45,7 @@ enum class Screen {
 fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewModel) {
     val logList by logViewModel.logList.observeAsState(emptyList())
     val navController = rememberNavController()
+    var lastLogId = -1L
 
     Scaffold (
       bottomBar = {
@@ -56,8 +58,8 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
         NavHost(
             navController = navController,
             startDestination = Screen.List.name,
-            Modifier//.padding(innerPadding)
-                .fillMaxSize()
+            modifier = Modifier.padding(innerPadding)
+                        .fillMaxSize()
         ) {
             composable(route = Screen.List.name) {
 
@@ -69,8 +71,7 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
                         logViewModel.fetchData()
                         swipeRefreshState.isRefreshing = false
                     },
-                    modifier = Modifier.padding(innerPadding)
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     LogList(navController, logList)
                 }
@@ -85,17 +86,19 @@ fun ModuCareApp(logViewModel: mLogViewModel, logDetailViewModel: LogDetailViewMo
                 })
             ) {
                 val logId = it.arguments?.getLong("logId") ?: -1
+                if (logId != -1L)
+                    lastLogId = logId
 
-                if (logId < 0)
+                if (lastLogId < 0)
                     LoadingScreen()
                 else
-                    LogDetail(logId, logDetailViewModel, logViewModel)
+                    LogDetail(lastLogId, logDetailViewModel, logViewModel)
             }
 
             composable(
                 route = Screen.Map.name
             ) {
-                MapScreen()
+                MapScreen(logViewModel)
             }
 
             composable(

@@ -35,8 +35,6 @@ class MainActivity : ComponentActivity() {
 
     private val logViewModel: mLogViewModel by viewModels()
     private val logDetailViewModel: LogDetailViewModel by viewModels()
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,32 +61,6 @@ class MainActivity : ComponentActivity() {
         createNotificationChannel("channel_id", "channel_name")
 
     }
-
-//    // 통합 위치 제공자 초기화
-//    private fun initLocationClient(){
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//
-//        val locationRequest = LocationRequest.Builder()
-//            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-//            .setInterval(1000)
-//            .setFastestInterval(500)
-//            .build()
-////        val locationRequest = LocationRequest.create()?.apply{
-////            interval = 1000
-////            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-////        }
-//
-//        val builder = LocationSettingsRequest.Builder()
-//            .addLocationRequest(locationRequest!!)
-//        val client = LocationServices.getSettingsClient(this)
-//        val task = client.checkLocationSettings(builder.build())
-//        task.addOnSuccessListener {
-//            Log.d(TAG, "location client setting success")
-//        }
-//        task.addOnFailureListener {
-//            Log.d(TAG, "location client setting fail")
-//        }
-//    }
 
     // Notification 수신을 위한 체널 추가
     private fun createNotificationChannel(id: String, name: String) {

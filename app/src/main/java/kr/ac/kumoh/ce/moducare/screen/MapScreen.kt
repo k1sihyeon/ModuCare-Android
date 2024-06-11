@@ -7,13 +7,24 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults.buttonColors
+import androidx.compose.material.SnackbarDefaults.backgroundColor
+import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.LocationTrackingMode
@@ -25,17 +36,21 @@ import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.rememberCameraPositionState
 import com.naver.maps.map.compose.rememberFusedLocationSource
 import com.naver.maps.map.location.FusedLocationSource
+import kr.ac.kumoh.ce.moducare.viewModel.mLogViewModel
 
 
 @Composable
-fun MapScreen() {
+fun MapScreen(logViewModel: mLogViewModel, modifier: Modifier = Modifier) {
 
-    val gumi = LatLng(36.145565, 128.392344)
+    val uncheckedLogs = logViewModel.uncheckedLogs.observeAsState(emptyList())
+    logViewModel.loadUncheckedLog()
+
+    val kumoh = LatLng(36.145544, 128.393329)
     val cameraPositionState: CameraPositionState = rememberCameraPositionState {
-        position = CameraPosition(gumi, 15.0)
+        position = CameraPosition(kumoh, 16.0)
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize()) {
         @OptIn(ExperimentalNaverMapApi::class)
         NaverMap(
             cameraPositionState = cameraPositionState,
@@ -47,26 +62,26 @@ fun MapScreen() {
                 isLocationButtonEnabled = true,
             )
         ) {
-            Marker(
-                state = MarkerState(position = gumi),
-                captionText = "Marker in kumoh"
-            )
+            uncheckedLogs.value.forEach {
+                Marker(
+                    state = MarkerState(position = LatLng(it.latitude, it.longitude)),
+                    captionText = it.content
+                )
+            }
         }
-//        Button(onClick = {
-//            // 카메라를 새로운 줌 레벨로 이동합니다.
-//            @OptIn(ExperimentalNaverMapApi::class)
-//            cameraPositionState.move(CameraUpdate.zoomIn())
-//        }) {
-//            Text(text = "Zoom In")
-//        }
+        Button(
+            onClick = {
+            cameraPositionState.position = CameraPosition(kumoh, 16.0)
+            },
+            colors = buttonColors(
+                backgroundColor = MaterialTheme.colorScheme.primary,
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Text(text = "근무지")
+        }
     }
-
-//    @OptIn(ExperimentalNaverMapApi::class)
-//    NaverMap(modifier = Modifier.fillMaxSize()) {
-//        Marker(
-//            state = MarkerState(position = gumi),
-//            captionText = "Marker in kumoh"
-//        )
-//    }
 
 }
